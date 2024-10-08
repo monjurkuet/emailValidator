@@ -4,6 +4,7 @@ import logging
 from contextlib import closing
 from tqdm import tqdm
 from multiprocessing import Pool, current_process
+import json
 
 # Set up logging configuration
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -28,7 +29,7 @@ def check_email(email):
     try:
         response = requests.post(API_URL, json=data)
         if response.status_code == 200:
-            return email, True, response.json()  # Return email, is_valid, response
+            return email, True, json.dumps(response.json())  # Return email, is_valid, response
         else:
             logging.error(f"[{current_process().name}] Request failed for {email}: {response.status_code} - {response.text}")
             return email, False, str(response.status_code)  # Return email, is_valid, error message
